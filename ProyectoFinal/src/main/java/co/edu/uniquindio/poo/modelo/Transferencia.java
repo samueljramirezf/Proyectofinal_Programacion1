@@ -65,6 +65,11 @@ public class Transferencia extends Transaccion {
     }
 
     @Override
+    public boolean esGasto() {
+        return !esEntreMonederosPropios();
+    }
+
+    @Override
     public String toString() {
         return super.toString() + " -> " + destino.getId() + " categoría " + categoria;
     }

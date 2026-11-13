@@ -40,13 +40,18 @@ public class MonederoServicio {
     private final ClienteRepositorio clienteRepositorio;
     private final TransaccionRepositorio transaccionRepositorio;
     private final PuntosServicio puntosServicio;
+    private final AnalisisServicio analisisServicio;
+    private final AlertasServicio alertasServicio;
     private final Reloj reloj;
 
     public MonederoServicio(ClienteRepositorio clienteRepositorio, TransaccionRepositorio transaccionRepositorio,
-                            PuntosServicio puntosServicio, Reloj reloj) {
+                            PuntosServicio puntosServicio, AnalisisServicio analisisServicio,
+                            AlertasServicio alertasServicio, Reloj reloj) {
         this.clienteRepositorio = Objects.requireNonNull(clienteRepositorio);
         this.transaccionRepositorio = Objects.requireNonNull(transaccionRepositorio);
         this.puntosServicio = Objects.requireNonNull(puntosServicio);
+        this.analisisServicio = Objects.requireNonNull(analisisServicio);
+        this.alertasServicio = Objects.requireNonNull(alertasServicio);
         this.reloj = Objects.requireNonNull(reloj);
     }
 
@@ -96,6 +101,7 @@ public class MonederoServicio {
         retiro.aplicarComision(factorRetiro(origen.getPropietario()));
         origen.debitar(retiro.getMontoTotal());
         completarYRegistrar(retiro, origen);
+        alertasServicio.revisarSaldoBajo(origen, retiro.getMontoTotal());
         return retiro;
     }
 
@@ -112,6 +118,7 @@ public class MonederoServicio {
         origen.debitar(transferencia.getMontoTotal());
         destino.acreditar(transferencia.getMonto());
         completarYRegistrar(transferencia, origen, destino);
+        alertasServicio.revisarSaldoBajo(origen, transferencia.getMontoTotal());
 
         beneficio.ifPresent(Beneficio::marcarUsado);
         return transferencia;
@@ -215,6 +222,7 @@ public class MonederoServicio {
         }
         transaccionRepositorio.guardar(transaccion);
         puntosServicio.otorgarPuntos(transaccion);
+        analisisServicio.evaluarAtipica(transaccion);
     }
 
     private BigDecimal factorRetiro(Cliente cliente) {

@@ -15,6 +15,7 @@ public class Cliente extends Usuario {
     private final List<MovimientoPuntos> movimientosPuntos = new ArrayList<>();
     private final List<Beneficio> beneficios = new ArrayList<>();
     private final List<Alerta> alertas = new ArrayList<>();
+    private final List<TransaccionProgramada> programadas = new ArrayList<>();
     private int puntosDisponibles;
     private int puntosAcumulados;
 
@@ -125,5 +126,13 @@ public class Cliente extends Usuario {
 
     public List<Alerta> getAlertas() {
         return Collections.unmodifiableList(alertas);
+    }
+
+    public void agregarProgramada(TransaccionProgramada programada) throws DatoInvalidoException {
+        programadas.add(Validaciones.noNulo(programada, "transacción programada"));
+    }
+
+    public List<TransaccionProgramada> getProgramadas() {
+        return Collections.unmodifiableList(programadas);
     }
 }

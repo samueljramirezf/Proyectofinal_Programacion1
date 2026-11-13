@@ -43,6 +43,10 @@ public abstract class Transaccion {
         return Optional.empty();
     }
 
+    public boolean esGasto() {
+        return getCategoriaGasto().isPresent();
+    }
+
     protected int bloquesParaPuntos() {
         return monto.divide(Config.UNIDADES_POR_BLOQUE_PUNTOS, 0, RoundingMode.FLOOR).intValue();
     }

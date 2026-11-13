@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BeneficioTest {
-
     @Test
     void testToStringSinFechaYNoUsado() throws Exception {
         Beneficio beneficio = new Beneficio(
