@@ -10,7 +10,6 @@ import co.edu.uniquindio.poo.modelo.Beneficio;
 import co.edu.uniquindio.poo.modelo.Categoria;
 import co.edu.uniquindio.poo.modelo.Cliente;
 import co.edu.uniquindio.poo.modelo.Deposito;
-import co.edu.uniquindio.poo.modelo.EstadoTransaccion;
 import co.edu.uniquindio.poo.modelo.Monedero;
 import co.edu.uniquindio.poo.modelo.Retiro;
 import co.edu.uniquindio.poo.modelo.TipoMonedero;
@@ -148,23 +147,13 @@ public class MonederoServicio {
         Transaccion transaccion = transaccionRepositorio.buscarPorId(idTransaccion)
                 .orElseThrow(() -> new DatoInvalidoException("transacción", "no existe la transacción " + idTransaccion));
 
-        if (transaccion.getEstado() != EstadoTransaccion.COMPLETADA) {
+        if (!transaccion.puedeRevertirse()) {
             throw new TransaccionNoReversibleException("La transacción " + idTransaccion
                     + " no se puede revertir porque está " + transaccion.getEstado());
         }
         puntosServicio.validarReversionPuntos(transaccion);
 
-        switch (transaccion.getTipo()) {
-            case DEPOSITO -> transaccion.getOrigen().debitar(transaccion.getMonto());
-
-            case RETIRO -> transaccion.getOrigen().acreditar(transaccion.getMontoTotal());
-            case TRANSFERENCIA -> {
-                Transferencia transferencia = (Transferencia) transaccion;
-
-                transferencia.getDestino().debitar(transferencia.getMonto());
-                transferencia.getOrigen().acreditar(transferencia.getMontoTotal());
-            }
-        }
+        transaccion.revertir();
 
         puntosServicio.revertirPuntos(transaccion);
         transaccion.marcarRevertida();

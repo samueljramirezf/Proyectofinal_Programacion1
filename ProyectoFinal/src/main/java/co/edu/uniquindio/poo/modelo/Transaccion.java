@@ -11,7 +11,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public abstract class Transaccion {
+public abstract class Transaccion implements Puntuable, Reversible {
     private static int contadorIds = 1;
 
     private String id;
@@ -78,9 +78,14 @@ public abstract class Transaccion {
         estado = EstadoTransaccion.COMPLETADA;
         id = "T-" + String.format("%05d", contadorIds++);
     }
+    @Override
+
+    public boolean puedeRevertirse(){
+        return estado == EstadoTransaccion.COMPLETADA;
+    }
 
     public void marcarRevertida() throws TransaccionNoReversibleException {
-        if (estado != EstadoTransaccion.COMPLETADA) {
+        if (!(puedeRevertirse())) {
             throw new TransaccionNoReversibleException(
                     "La transacción " + id + " no se puede revertir porque está " + estado);
         }

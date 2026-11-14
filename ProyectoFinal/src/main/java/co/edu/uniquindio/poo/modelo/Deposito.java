@@ -2,6 +2,7 @@ package co.edu.uniquindio.poo.modelo;
 
 import co.edu.uniquindio.poo.excepcion.DatoInvalidoException;
 import co.edu.uniquindio.poo.excepcion.MontoInvalidoException;
+import co.edu.uniquindio.poo.excepcion.SaldoInsuficienteException;
 import co.edu.uniquindio.poo.util.Config;
 
 import java.math.BigDecimal;
@@ -22,9 +23,14 @@ public class Deposito extends Transaccion {
     public int calcularPuntos() {
         return bloquesParaPuntos() * Config.PUNTOS_POR_BLOQUE_DEPOSITO;
     }
-
     @Override
     public BigDecimal getTasaComisionBase() {
         return Config.COMISION_DEPOSITO;
+    }
+
+    @Override
+    public void revertir() throws
+    MontoInvalidoException, SaldoInsuficienteException{
+        getOrigen().debitar(getMonto());
     }
 }

@@ -11,6 +11,7 @@ import co.edu.uniquindio.poo.modelo.TransaccionProgramada;
 import co.edu.uniquindio.poo.repositorio.ClienteRepositorio;
 import co.edu.uniquindio.poo.util.Config;
 import co.edu.uniquindio.poo.util.Reloj;
+import co.edu.uniquindio.poo.notificacion.Notificador;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -20,10 +21,12 @@ import java.util.Objects;
 public class AlertasServicio {
     private final ClienteRepositorio clienteRepositorio;
     private final Reloj reloj;
+    private final List<Notificador> notificadores;
 
-    public AlertasServicio(ClienteRepositorio clienteRepositorio, Reloj reloj) {
+    public AlertasServicio(ClienteRepositorio clienteRepositorio, Reloj reloj, List<Notificador> notificadores) {
         this.clienteRepositorio = Objects.requireNonNull(clienteRepositorio);
         this.reloj = Objects.requireNonNull(reloj);
+        this.notificadores = List.copyOf(notificadores);
     }
 
     public void revisarSaldoBajo(Monedero monedero, BigDecimal montoDebitado) throws DatoInvalidoException {
@@ -56,6 +59,10 @@ public class AlertasServicio {
     }
 
     private void crear(Cliente cliente, TipoAlerta tipo, String mensaje) throws DatoInvalidoException {
-        cliente.agregarAlerta(new Alerta(tipo, mensaje, reloj.ahora()));
+        Alerta alerta = new Alerta(tipo, mensaje, reloj.ahora());
+        cliente.agregarAlerta(alerta);
+        for (Notificador notificador : notificadores) {
+            notificador.enviar(cliente, alerta);
+        }
     }
 }

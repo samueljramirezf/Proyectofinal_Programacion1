@@ -2,6 +2,7 @@ package co.edu.uniquindio.poo.modelo;
 
 import co.edu.uniquindio.poo.excepcion.DatoInvalidoException;
 import co.edu.uniquindio.poo.excepcion.MontoInvalidoException;
+import co.edu.uniquindio.poo.excepcion.SaldoInsuficienteException;
 import co.edu.uniquindio.poo.util.Config;
 import co.edu.uniquindio.poo.util.Validaciones;
 
@@ -69,6 +70,12 @@ public class Transferencia extends Transaccion {
         return !esEntreMonederosPropios();
     }
 
+    @Override
+    public void revertir() throws MontoInvalidoException, SaldoInsuficienteException
+    {
+    getDestino().debitar(getMonto());
+                getOrigen().acreditar(getMontoTotal());
+}
     @Override
     public String toString() {
         return super.toString() + " -> " + destino.getId() + " categoría " + categoria;
