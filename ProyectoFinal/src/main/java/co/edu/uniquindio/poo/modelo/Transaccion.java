@@ -35,6 +35,7 @@ public abstract class Transaccion implements Puntuable, Reversible {
 
     public abstract TipoTransaccion getTipo();
 
+    @Override
     public abstract int calcularPuntos();
 
     public abstract BigDecimal getTasaComisionBase();
@@ -78,8 +79,8 @@ public abstract class Transaccion implements Puntuable, Reversible {
         estado = EstadoTransaccion.COMPLETADA;
         id = "T-" + String.format("%05d", contadorIds++);
     }
-    @Override
 
+    @Override
     public boolean puedeRevertirse(){
         return estado == EstadoTransaccion.COMPLETADA;
     }

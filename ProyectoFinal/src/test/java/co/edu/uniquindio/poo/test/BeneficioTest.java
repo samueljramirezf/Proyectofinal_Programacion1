@@ -54,7 +54,6 @@ class BeneficioTest {
 
     @Test
     void testMarcarUsadoBeneficioPorTiempoLanzaExcepcion() {
-
         Beneficio beneficio = null;
         try {
             beneficio = new Beneficio(
