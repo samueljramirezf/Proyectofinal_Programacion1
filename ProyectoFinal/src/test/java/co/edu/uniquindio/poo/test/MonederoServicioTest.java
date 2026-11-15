@@ -159,4 +159,39 @@ class MonederoServicioTest {
         System.out.println("Saldo destino: " +
                 monederoServicio.consultarSaldo(idSegundoMonedero));
     }
+    @Test
+    void testConsultarSaldo() throws Exception {
+
+        monederoServicio.depositar(
+                idMonedero,
+                new BigDecimal("75000"),
+                "Depósito inicial"
+        );
+
+        BigDecimal saldo = monederoServicio.consultarSaldo(idMonedero);
+
+        assertEquals(
+                0,
+                new BigDecimal("75000.00").compareTo(saldo)
+        );
+    }
+
+    @Test
+    void testConsultarHistorial() throws Exception {
+
+        monederoServicio.depositar(
+                idMonedero,
+                new BigDecimal("100000"),
+                "Primer depósito"
+        );
+
+        monederoServicio.retirar(
+                idMonedero,
+                new BigDecimal("10000"),
+                Categoria.TRANSPORTE,
+                "Transporte"
+        );
+
+        assertEquals(2, monederoServicio.historial(idCliente).size());
+    }
 }
