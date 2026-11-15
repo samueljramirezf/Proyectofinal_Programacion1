@@ -70,6 +70,13 @@ public class MonederoServicio {
                 .orElseThrow(() -> new ClienteNoEncontradoException(identificacion));
     }
 
+    public Cliente iniciarSesion(String identificacion, String contrasena) throws DatoInvalidoException {
+        return clienteRepositorio.buscarPorId(identificacion)
+                .filter(cliente -> cliente.verificarContrasena(contrasena))
+                .orElseThrow(() -> new DatoInvalidoException("inicio de sesión",
+                        "identificación o contraseña incorrecta"));
+    }
+
     public Monedero crearMonedero(String idCliente, String nombre, TipoMonedero tipo)
             throws ClienteNoEncontradoException, DatoInvalidoException {
         return buscarCliente(idCliente).abrirMonedero(nombre, tipo);

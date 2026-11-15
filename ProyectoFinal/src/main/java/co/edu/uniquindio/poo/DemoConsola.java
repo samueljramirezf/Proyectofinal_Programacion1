@@ -22,7 +22,7 @@ import co.edu.uniquindio.poo.util.Reloj;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Main {
+public class DemoConsola {
     public static void main(String[] args) throws MonederoException {
         Reloj reloj = new Reloj();
         ClienteRepositorio clientes = new ClienteRepositorio();
