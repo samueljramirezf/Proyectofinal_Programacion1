@@ -21,7 +21,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MonederoServicioTest {
-
     private MonederoServicio monederoServicio;
     private String idCliente;
     private String idMonedero;
@@ -30,7 +29,6 @@ class MonederoServicioTest {
 
     @BeforeEach
     void setUp() throws Exception {
-
         ClienteRepositorio clienteRepositorio = new ClienteRepositorio();
         TransaccionRepositorio transaccionRepositorio = new TransaccionRepositorio();
 
@@ -93,7 +91,6 @@ class MonederoServicioTest {
 
     @Test
     void testDepositar() throws Exception {
-
         monederoServicio.depositar(
                 idMonedero,
                 new BigDecimal("50000"),
@@ -112,7 +109,6 @@ class MonederoServicioTest {
 
     @Test
     void testRetirar() throws Exception {
-
         monederoServicio.depositar(
                 idMonedero,
                 new BigDecimal("100000"),
@@ -138,7 +134,6 @@ class MonederoServicioTest {
 
     @Test
     void testTransferir() throws Exception {
-
         monederoServicio.depositar(
                 idMonedero,
                 new BigDecimal("100000"),
@@ -153,15 +148,26 @@ class MonederoServicioTest {
                 "Transferencia de prueba"
         );
 
-        System.out.println("Saldo origen: " +
-                monederoServicio.consultarSaldo(idMonedero));
+        assertEquals(
+                0,
+                new BigDecimal("79620.00").compareTo(
+                        monederoServicio.consultarSaldo(idMonedero)
+                )
+        );
 
-        System.out.println("Saldo destino: " +
-                monederoServicio.consultarSaldo(idSegundoMonedero));
+        assertEquals(
+                0,
+                new BigDecimal("20000.00").compareTo(
+                        monederoServicio.consultarSaldo(idSegundoMonedero)
+                )
+        );
+
+        assertEquals(2, monederoServicio.historial(idCliente).size());
+        assertEquals(1, monederoServicio.historial(idSegundoCliente).size());
     }
+
     @Test
     void testConsultarSaldo() throws Exception {
-
         monederoServicio.depositar(
                 idMonedero,
                 new BigDecimal("75000"),
@@ -178,7 +184,6 @@ class MonederoServicioTest {
 
     @Test
     void testConsultarHistorial() throws Exception {
-
         monederoServicio.depositar(
                 idMonedero,
                 new BigDecimal("100000"),
